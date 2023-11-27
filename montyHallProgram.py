@@ -61,7 +61,7 @@ def main():
     pick = 1
     win = 1
     open = 1
-    runs = 1000
+    runs = 100000
     simulationNoSwitch = 0
     simulationSwitch = 0
     switch = False
@@ -81,14 +81,19 @@ def main():
     print("True probability with no switching: " + str(trueNoSwitch))
     print("True probability with switching: " + str(trueSwitch))
     end = time.time()
-    graph(probabilitiesNoSwitch, trueNoSwitch)
-    graph(probabilitiesSwitch, trueSwitch)
+    graph(probabilitiesNoSwitch, trueNoSwitch, runs)
+    graph(probabilitiesSwitch, trueSwitch, runs)
     print("Time taken: " + str(end - start))
 
-def graph(probabilities, trueValue):
+def graph(probabilities, trueValue, simulations):
     #takes probabilities vector and makes a graph of how probability changes over the simulations
-    plt.plot(probabilities)
-    plt.plot(trueValue)
+    x = []
+    trueValueVector = []
+    for i in range(1, simulations + 1):
+        x.append(i)
+        trueValueVector.append(trueValue)
+    plt.plot(x, probabilities)
+    plt.plot(x, trueValueVector)
     plt.ylabel('Probability')
     plt.xlabel('Simulations')
     ax = plt.gca()
