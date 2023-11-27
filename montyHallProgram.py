@@ -81,13 +81,14 @@ def main():
     print("True probability with no switching: " + str(trueNoSwitch))
     print("True probability with switching: " + str(trueSwitch))
     end = time.time()
-    graph(probabilitiesNoSwitch)
-    graph(probabilitiesSwitch)
+    graph(probabilitiesNoSwitch, trueNoSwitch)
+    graph(probabilitiesSwitch, trueSwitch)
     print("Time taken: " + str(end - start))
 
-def graph(probabilities):
+def graph(probabilities, trueValue):
     #takes probabilities vector and makes a graph of how probability changes over the simulations
     plt.plot(probabilities)
+    plt.plot(trueValue)
     plt.ylabel('Probability')
     plt.xlabel('Simulations')
     ax = plt.gca()
