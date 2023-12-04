@@ -1,7 +1,9 @@
 import math
+from math import comb
+from math import factorial
 import random
 import time
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 def montyHall(total, pick, win, open, switch):
 
@@ -50,21 +52,19 @@ def montyHall(total, pick, win, open, switch):
     #decides winner or loser
     picked = set(picked)
     winners = set(winners)
-    if len(picked.intersection(winners)) > 0:
-        return 1
-    else:
-        return 0
+    winnerCounter = len(picked.intersection(winners))
+    return winnerCounter
 
 def main():
     start = time.time()
-    total = 3
-    pick = 1
-    win = 1
-    open = 1
+    total = 20
+    pick = 7
+    win = 4
+    open = 3
+    switch = total - pick - open
     runs = 100000
     simulationNoSwitch = 0
     simulationSwitch = 0
-    switch = False
     probabilitiesNoSwitch = []
     probabilitiesSwitch = []
     for i in range(1, runs + 1):
@@ -72,32 +72,71 @@ def main():
         simulationSwitch += montyHall(total, pick, win, open, True)
         probabilitiesNoSwitch.append(simulationNoSwitch / i)
         probabilitiesSwitch.append(simulationSwitch / i)
-    simulationNoSwitch = simulationNoSwitch / runs
-    simulationSwitch = simulationSwitch / runs
+    #For normal probablility
+    simulationNoSwitch = simulationNoSwitch / runs / pick
+    simulationSwitch = simulationSwitch / runs / switch
+    #For at least one probability
+    simulationNoSwitchAtLeastOne = simulationNoSwitch / runs
+    simulationSwitchAtLeastOne = simulationSwitch / runs
     print("Simulation's probability with no switching: " + str(simulationNoSwitch))
     print("Simulation's probability with switching: " + str(simulationSwitch))
-    trueNoSwitch = 1 - (math.factorial(total - win) * math.factorial(total - pick)) / (math.factorial(total) * math.factorial(total - win - pick))
-    trueSwitch = 0
+    trueNoSwitch = win / total
+    trueSwitch = ((total-pick)/total)*(win/(total-pick-open))
+    #switch formula
+    switchSum = 0
+    switchProduct = 0
+
+
+
+    # for i in range(pick):
+    #     switchProduct = comb(pick, i)
+    #     #times
+    #     switchProduct *= factorial(total - pick) / factorial(total)
+    #     #times
+    #     for j in range(pick - i - 1):
+    #         if j == 0:
+    #             totalWinJ = total - win
+    #         else:
+    #             totalWinJ *= (total - win - j)
+    #     switchProduct *= totalWinJ
+    #     #times
+    #     for j in range(i - 1):
+    #         if j == 0:
+    #             winJ = win
+    #         else:
+    #             winJ *= (win - j)
+    #     switchProduct *= winJ
+    #     #times
+    #     for j in range(pick - 1):
+    #         if j == 0:
+    #             swij = (switch - win + i - j) / (switch - j)
+    #         else:
+    #             swij *= (switch - win + i - j) / (switch - j)
+    #     switchProduct *= swij
+    #     switchSum += switchProduct
+    # trueSwitch = 1 - switchSum
+
+
     print("True probability with no switching: " + str(trueNoSwitch))
     print("True probability with switching: " + str(trueSwitch))
     end = time.time()
-    graph(probabilitiesNoSwitch, trueNoSwitch, runs)
-    graph(probabilitiesSwitch, trueSwitch, runs)
+    #graph(probabilitiesNoSwitch, trueNoSwitch, runs)
+    #graph(probabilitiesSwitch, trueSwitch, runs)
     print("Time taken: " + str(end - start))
 
-def graph(probabilities, trueValue, simulations):
-    #takes probabilities vector and makes a graph of how probability changes over the simulations
-    x = []
-    trueValueVector = []
-    for i in range(1, simulations + 1):
-        x.append(i)
-        trueValueVector.append(trueValue)
-    plt.plot(x, probabilities)
-    plt.plot(x, trueValueVector)
-    plt.ylabel('Probability')
-    plt.xlabel('Simulations')
-    ax = plt.gca()
-    ax.set_ylim([0, 1])
-    plt.show()
+# def graph(probabilities, trueValue, simulations):
+#     #takes probabilities vector and makes a graph of how probability changes over the simulations
+#     x = []
+#     trueValueVector = []
+#     for i in range(1, simulations + 1):
+#         x.append(i)
+#         trueValueVector.append(trueValue)
+#     plt.plot(x, probabilities)
+#     plt.plot(x, trueValueVector)
+#     plt.ylabel('Probability')
+#     plt.xlabel('Simulations')
+#     ax = plt.gca()
+#     ax.set_ylim([0, 1])
+#     plt.show()
 
 main()
